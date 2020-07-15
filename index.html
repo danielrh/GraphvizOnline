@@ -421,6 +421,43 @@
       updateState()
     }
 
+    function updateStyle(event) {
+      var reliableHost = "ml-hub";
+      if(event.origin.startsWith('https://' + reliableHost) || event.origin.startsWith('http://' + reliableHost)) {
+        var style = event.data.style;
+        var nodeName = event.data.nodeName;
+        // only show the graph 
+        if (style) {
+          var addedStyle = document.createElement('style');
+          addedStyle.innerHTML = style;
+          var ref = document.querySelector('script');
+          ref.parentNode.insertBefore(addedStyle, ref);
+        }
+        // change selected node style
+        if(nodeName) {
+          var nodes = document.getElementsByTagName("g");
+          for (var i = 0; i < nodes.length; i++) {
+            var text = nodes[i].querySelectorAll('text'); 
+            if(text.length > 0) {
+              text = text[0].innerHTML; 
+              if(text == nodeName) {
+                var polygon = nodes[i].querySelectorAll('polygon')[0];
+                if(polygon) {
+                  polygon.style.stroke = "red";
+                  polygon.style.strokeWidth = "5";
+                }
+                var innerText = nodes[i].querySelectorAll('text')[0];
+                if(innerText) {
+                  innerText.style.fill = "red";
+                  innerText.style.fontWeight = "bold";
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
     editor.setTheme("ace/theme/twilight");
     editor.getSession().setMode("ace/mode/dot");
     editor.getSession().on("change", function () {
@@ -433,6 +470,8 @@
         editor.getSession().setValue(decodeURIComponent(event.state.content));
       }
     };
+
+    window.addEventListener("message", updateStyle, false);
 
     formatEl.addEventListener("change", renderGraph);
     engineEl.addEventListener("change", renderGraph);
