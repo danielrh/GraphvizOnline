@@ -435,25 +435,12 @@
         }
         // change selected node style
         if(nodeName) {
-          var nodes = document.getElementsByTagName("g");
-          for (var i = 0; i < nodes.length; i++) {
-            var text = nodes[i].querySelectorAll('text'); 
-            if(text.length > 0) {
-              text = text[0].innerHTML; 
-              if(text == nodeName) {
-                var polygon = nodes[i].querySelectorAll('polygon')[0];
-                if(polygon) {
-                  polygon.style.stroke = "red";
-                  polygon.style.strokeWidth = "5";
-                }
-                var innerText = nodes[i].querySelectorAll('text')[0];
-                if(innerText) {
-                  innerText.style.fill = "red";
-                  innerText.style.fontWeight = "bold";
-                }
-              }
-            }
-          }
+          var targetRange =  editor.find(nodeName);
+          var targetLine = editor.session.getLine(targetRange.start.row)
+          targetRange.start.column = 0;
+          targetRange.end.column = Number.MAX_VALUE;
+          targetLine = targetLine.replace(']', ', color="red", fontcolor="red”, fontsize="50"]')
+          editor.session.replace(targetRange, targetLine)
         }
       }
     }
