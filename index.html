@@ -439,7 +439,7 @@
           var targetLine = editor.session.getLine(targetRange.start.row)
           targetRange.start.column = 0;
           targetRange.end.column = Number.MAX_VALUE;
-          targetLine = targetLine.replace(']', ', color="red", fontcolor="red”, fontsize="50"]')
+          targetLine = targetLine.replace(']', ', color="red", fontcolor="red", fontsize="50"]')
           editor.session.replace(targetRange, targetLine)
         }
       }
